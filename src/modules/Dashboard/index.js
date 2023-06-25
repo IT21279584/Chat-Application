@@ -92,15 +92,14 @@ const Dashboard = () => {
           <div className="cursor-pointer">
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              class="icon icon-tabler icon-tabler-phone-call"
+              className="icon icon-tabler icon-tabler-phone-call"
               width="30"
               height="30"
               viewBox="0 0 24 24"
-              stroke-width="1.5"
+              
               stroke="#2c3e50"
               fill="none"
-              stroke-linecap="round"
-              stroke-linejoin="round"
+              
             >
               <path stroke="none" d="M0 0h24v24H0z" fill="none" />
               <path d="M5 4h4l2 5l-2.5 1.5a11 11 0 0 0 5 5l1.5 -2.5l5 2v4a2 2 0 0 1 -2 2a16 16 0 0 1 -15 -15a2 2 0 0 1 2 -2" />
@@ -119,25 +118,24 @@ const Dashboard = () => {
               Open Source Events and Hackathons: Keep an eye out for open-source
               events
             </div>
-          </div>
+          </div> 
         </div>
         <div className="flex items-center w-full p-14">
           <Input
             placeholder="Type a message ..."
-            className="p-4 border-8 rounded-full shadow-md outline-none  bg-light focus:ring-0 focus:border-0"
+            className="p-4 border-8 rounded-full shadow-md outline-none bg-light focus:ring-0 focus:border-0"
           />
           <div className="p-2 ml-4 rounded-full cursor-pointer bg-light">
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              class="icon icon-tabler icon-tabler-send"
+              className="icon icon-tabler icon-tabler-send"
               width="30"
               height="30"
               viewBox="0 0 24 24"
-              stroke-width="1.5"
+             
               stroke="#2c3e50"
               fill="none"
-              stroke-linecap="round"
-              stroke-linejoin="round"
+              
             >
               <path stroke="none" d="M0 0h24v24H0z" fill="none" />
               <path d="M10 14l11 -11" />
@@ -147,15 +145,14 @@ const Dashboard = () => {
           <div className="p-2 ml-4 rounded-full cursor-pointer bg-light">
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              class="icon icon-tabler icon-tabler-circle-plus"
+              className="icon icon-tabler icon-tabler-circle-plus"
               width="30"
               height="30"
               viewBox="0 0 24 24"
-              stroke-width="1.5"
+              
               stroke="#2c3e50"
               fill="none"
-              stroke-linecap="round"
-              stroke-linejoin="round"
+              
             >
               <path stroke="none" d="M0 0h24v24H0z" fill="none" />
               <path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0" />
