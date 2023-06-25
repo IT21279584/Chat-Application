@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import Input from "../../components";
 import Button from "../../components/Button";
+import { useNavigate } from "react-router-dom";
 
 export default function Form({ isSignPage = false }) {
   const [formData, setFormData] = useState({
@@ -12,6 +13,8 @@ export default function Form({ isSignPage = false }) {
     password: "",
   });
 
+  const navigate = useNavigate();
+
   return (
     <div className="bg-white w-[600px] h-[800px] shadow-lg rounded-lg flex flex-col justify-center items-center">
       <div className="text-4xl font-extrabold">
@@ -22,7 +25,7 @@ export default function Form({ isSignPage = false }) {
       </div>
       <form
         onSubmit={() => console.log("Submitted")}
-        className="flex flex-col justify-center w-full items-center"
+        className="flex flex-col items-center justify-center w-full"
       >
         {!isSignPage && (
           <Input
@@ -62,7 +65,7 @@ export default function Form({ isSignPage = false }) {
       </form>
       <div>
         {isSignPage ? "Don't have an account? " : "Already have an account? "}
-        <span className="text-primary cursor-pointer underline">
+        <span className="underline cursor-pointer text-primary" onClick={()=>navigate(`/users/${isSignPage ? 'sign-up' : 'sign-in'}`)}>
           {isSignPage ? "Sign up" : "Sign in"}
         </span>
       </div>
