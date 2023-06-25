@@ -21,14 +21,14 @@ function App() {
   return ( 
     <div className="bg-[#edf3fc] h-screen flex justify-center items-center">
       <Routes>
-        <Route
+        <Route 
           path="/"
           element={
             <ProtectRoute>
-              <Dashboard />
-            </ProtectRoute>
+              <Dashboard /> 
+            </ProtectRoute> 
           }
-        ></Route>
+        ></Route> 
         <Route
           path="/users/sign-in"
           element={
