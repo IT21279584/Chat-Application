@@ -18,7 +18,7 @@ function App() {
 
     return children;
   };
-  return (
+  return ( 
     <div className="bg-[#edf3fc] h-screen flex justify-center items-center">
       <Routes>
         <Route
