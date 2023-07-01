@@ -6,7 +6,7 @@ const router = express.Router()
 router.post('/api/conversation', async(req, res)=>{
     try{
 
-        const {senderId, receiverId} = req.body
+        const {senderId, receiverId} = req.body;
         const newConversation = new Conversation({members:{senderId, receiverId}})
         await newConversation.save()
         
