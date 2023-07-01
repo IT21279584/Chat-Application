@@ -2,9 +2,9 @@ const mongoose = require('mongoose')
 
 const conversationSchema = mongoose.Schema({
     members:{
-        type: String,
+        type: Array,
         required: true
-    }
+    } 
 })
 
 module.exports =  Conversation = mongoose.model("conversations", conversationSchema)
