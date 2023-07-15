@@ -6,8 +6,9 @@ const app = express()
 
 //import router
 const users = require('./routes/users')
-const conversations = require('./models/Conversation')
-
+const conversations = require('./routes/conversations')
+const messages = require('./routes/messages')
+    
 //bodyparser middleware
 app.use(
     bodyParser.urlencoded({
@@ -36,4 +37,5 @@ app.listen(port, () => console.log(`Server up and running on port ${port}!`))
 
 //routes 
 app.use('/users', users) 
-app.use('/conversations', conversations) 
+app.use('/conversations', conversations)
+app.use('/messages', messages) 

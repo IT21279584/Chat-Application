@@ -12,6 +12,6 @@ module.exports = {
         'light': '#f9faff'
       },
     },
-  },
+  }, 
   plugins: [],
 }

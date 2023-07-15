@@ -4,7 +4,7 @@ const bcryptjs = require('bcrypt')
 const jwt = require('jsonwebtoken');
 
 //Control of the requests startimg with path
-const router = express.Router();
+const router = express.Router(); 
 
 router.post('/api/register', async(req, res, next)=>{
     try{
@@ -62,15 +62,11 @@ router.post('/api/login', async (req, res, next)=>{
                             $set: {token}
                         })
                         user.save()
-                        next()
+                        return res.status(200).json({user:{email: user.email, name:user.name}, token: token})
                         
-                    
                     })
-
-                    
-                    return res.status(200).json({user:{email: user.email, name:user.name}, token:user.token})
                 }
-            }
+            } 
         }
 
     }catch(error){
@@ -78,5 +74,17 @@ router.post('/api/login', async (req, res, next)=>{
     }
 })
 
+router.get('/api/users/:userId', async (req, res) => {
+    try {
+        const userId = req.params.userId;
+        const users = await Users.find({ _id: { $ne: userId } });
+        const usersData = Promise.all(users.map(async (user) => {
+            return { user: { email: user.email, fullName: user.fullName, receiverId: user._id } }
+        }))
+        res.status(200).json(await usersData);
+    } catch (error) {
+        console.log('Error', error)
+    }
+})
 
-module.exports = router;
+module.exports = router;  

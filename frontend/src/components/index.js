@@ -12,7 +12,7 @@ const Input = ({
 }) => {
   return (
     <div className="w-1/2">
-      <label className="black text-ssm font-medium text-gray-800">
+      <label className="font-medium text-gray-800 black text-ssm">
         {label}
       </label>
       <input
