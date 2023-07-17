@@ -8,7 +8,7 @@ const Form = ({
 }) => {
   const [formData, setFormData] = useState({
       ...(!isSignInPage && {
-          fullName: ''
+          name: ''
       }),
       email: '',
       password: ''

@@ -13,15 +13,16 @@ router.post('/api/conversation', async (req, res) => {
         console.log(error, 'Error')
     }
 })
+ 
 
-router.get('/api/conversations/:userId', async (req, res) => {
+router.get('/api/conversations/:userId', async (req, res) => { 
     try {
         const userId = req.params.userId;
         const conversations = await Conversation.find({ members: { $in: [userId] } });
         const conversationUserData = Promise.all(conversations.map(async (conversation) => {
             const receiverId = conversation.members.find((member) => member !== userId);
             const user = await Users.findById(receiverId);
-            return { user: { receiverId: user._id, email: user.email, fullName: user.fullName }, conversationId: conversation._id }
+            return { user: { receiverId: user._id, email: user.email, name: user.name }, conversationId: conversation._id }
         }))
         res.status(200).json(await conversationUserData);
     } catch (error) {

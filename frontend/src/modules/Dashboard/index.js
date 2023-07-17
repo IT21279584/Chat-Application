@@ -4,28 +4,31 @@ import Input from "../../components/index";
 
 const Dashboard = () => {
 
-  const [user, setUser] = useState(JSON.parse(localStorage.getItem("user: details")))
+  const [user, setUser] = useState(JSON.parse(localStorage.getItem('user:detail')))
   const [conversation, setConversation] = useState([])
   const [messages, setMessages] = useState([])
   const [message, setMessage] = useState([])
+  const [users, setUsers] = useState([])
+  
+
 
   useEffect(()=>{
-    const loggedInUser = JSON.parse(localStorage.getItem('user:details'))
+    const loggedInUser = JSON.parse(localStorage.getItem('user:detail'))
     const fetchConversation = async()=>{
-      const res = await fetch(`http://localhost:8050/conversations/api/conversation/${loggedInUser?.id}`,{
+      const res = await fetch(`http://localhost:8050/conversations/api/conversations/${loggedInUser?.id}`,{
         method:'GET',
         headers:{
           'Content_Type': 'application/json'
         }
-      })
-      const resData = await res.json()
+      })  
+      const resData = await res.json()  
       setConversation(resData)
     }
     fetchConversation()
   }, [])
 
-  const fetchMessages = async(conversationId)=>{
-    const res = await fetch(`http://localhost:8050/messages/api/message/${conversationId}`,{
+  const fetchMessages = async(conversationId, receiver)=>{
+    const res = await fetch(`http://localhost:8050/messages/api/message/${conversationId}?senderId=${user?.id}&&receiverId=${receiver?.receiverId}`,{
       method:'GET',
       headers:{
         'Content_Type': 'application/json'
@@ -35,9 +38,23 @@ const Dashboard = () => {
     setMessages({messages:resData, receiver: user, conversationId})
   }
 
+  useEffect(() => {
+		const fetchUsers = async () => {
+			const res = await fetch(`http://localhost:8050/users/api/users/${user?.id}`, {
+				method: 'GET',
+				headers: {
+					'Content-Type': 'application/json',
+				}
+			});
+			const resData = await res.json()
+			setUsers(resData)
+		}
+		fetchUsers()
+	}, [])
+
   const sendMessage = async(e)=>{
   
-    const res = await fetch(`http://localhost:/messages/8050/api/message`,{
+    const res = await fetch('http://localhost:8050/messages/api/message', {
       method:'POST',
       headers:{
         'Content_Type': 'application/json'
@@ -64,7 +81,7 @@ const Dashboard = () => {
             <img src={Avatar} width={75} height={75} alt="avatar" />
           </div>
           <div className="ml-8">
-            <h3 className="text-2xl">{user.name}</h3>
+            <h3 className="text-2xl">{user?.name}</h3>
             <p className="text-lg font-light">My Account</p>
           </div>
         </div>
@@ -72,13 +89,13 @@ const Dashboard = () => {
         <div className="mx-14 mt-10 h-[75%] overflow-y-scroll !mr-0 p-8">
           <div className="mt-4 text-2xl text-primary">Messages</div>
           <div>
-            {conversation.length >0 ?
+            {conversation.length > 0 ?
               
                conversation.map(({ conversationId, user }) => {
               return (
                 <div className="flex py-8 border-b border-b-gray-300">
                   <div className="flex cursor-pointer" onClick={()=>
-                    fetchMessages(conversationId)
+                    fetchMessages(conversationId, user)
                   }>
                     <div>
                       <img
@@ -91,7 +108,7 @@ const Dashboard = () => {
                     </div>
                     <div className="ml-6">
                       <h3 className="text-lg font-semibold">{user?.name}</h3>
-                      <p className="text-sm font-light">{user?.status}</p>
+                      <p className="text-sm font-light">{user?.email}</p>
                     </div>
                   </div>
                 </div>
@@ -122,11 +139,11 @@ const Dashboard = () => {
               height="30"
               viewBox="0 0 24 24"
               
-              stroke="#2c3e50"
+              
               fill="none"
               
             >
-              <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+              <path d="M0 0h24v24H0z" fill="none" />
               <path d="M5 4h4l2 5l-2.5 1.5a11 11 0 0 0 5 5l1.5 -2.5l5 2v4a2 2 0 0 1 -2 2a16 16 0 0 1 -15 -15a2 2 0 0 1 2 -2" />
               <path d="M15 7a2 2 0 0 1 2 2" />
               <path d="M15 3a6 6 0 0 1 6 6" />
@@ -134,33 +151,7 @@ const Dashboard = () => {
           </div> 
         </div>    
         }
-        <div className="w-[75%] bg-secondary h-[80px] mt-14 rounded-full flex items-center px-14 mb-6">
-          <div className="cursor-pointer">
-            <img src={Avatar} alt="mainIcon" height={60} width={60} />
-          </div>
-          <div className="ml-6 mr-auto">
-            <h3 className="text-lg">Hansaka</h3>
-            <p className="text-sm font-light text-gray-600">Online</p>
-          </div>
-          <div className="cursor-pointer">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="icon icon-tabler icon-tabler-phone-call"
-              width="30"
-              height="30"
-              viewBox="0 0 24 24"
-              
-              stroke="#2c3e50"
-              fill="none"
-              
-            >
-              <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-              <path d="M5 4h4l2 5l-2.5 1.5a11 11 0 0 0 5 5l1.5 -2.5l5 2v4a2 2 0 0 1 -2 2a16 16 0 0 1 -15 -15a2 2 0 0 1 2 -2" />
-              <path d="M15 7a2 2 0 0 1 2 2" />
-              <path d="M15 3a6 6 0 0 1 6 6" />
-            </svg>   
-          </div> 
-        </div>    
+        
         <div className="h-[75%]  w-full overflow-y-scroll">
           <div className="p-14">
             
@@ -182,57 +173,55 @@ const Dashboard = () => {
                 )
               }
               
-            }) : <div className="mt-24 text-lg font-semibold text-center">No Messages</div>            
+            }) : <div className='mt-24 text-lg font-semibold text-center'>No Messages or No Conversation Selected</div>       
             }
             
            
           </div> 
         </div>
-        <div className="flex items-center w-full p-14">
-          <input
-       
-            placeholder="Type a message ..."   value={message} onChange={(e)=>sendMessage(e.target.value)}
-            // className="p-4 border-8 rounded-full shadow-md outline-none bg-light focus:ring-0 focus:border-0"
-            className='bg-gray-50 text-sm border border-gray-300 text-gray-900 t  focus:ring-blue-500 focus:border-blue-500 block w-[50%] p-2 h-[35px]'
-          />
-          <div className="p-2 ml-4 rounded-full cursor-pointer bg-light">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="icon icon-tabler icon-tabler-send"
-              width="30"
-              height="30"
-              viewBox="0 0 24 24"
-             
-              stroke="#2c3e50"
-              fill="none"
-              
-            >
-              <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-              <path d="M10 14l11 -11" />
-              <path d="M21 3l-6.5 18a.55 .55 0 0 1 -1 0l-3.5 -7l-7 -3.5a.55 .55 0 0 1 0 -1l18 -6.5" />
-            </svg>
-          </div>
-          <div className="p-2 ml-4 rounded-full cursor-pointer bg-light">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="icon icon-tabler icon-tabler-circle-plus"
-              width="30"
-              height="30"
-              viewBox="0 0 24 24"
-              
-              stroke="#2c3e50"
-              fill="none"
-              
-            >
-              <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-              <path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0" />
-              <path d="M9 12l6 0" />
-              <path d="M12 9l0 6" />
-            </svg>
-          </div>
-        </div>
+        {
+					messages?.receiver?.name &&
+					<div className='flex items-center w-full p-14'>
+						<Input placeholder='Type a message...' value={message} onChange={(e) => setMessage(e.target.value)} className='w-[75%]' inputClassName='p-4 border-0 shadow-md rounded-full bg-light focus:ring-0 focus:border-0 outline-none' />
+						<div className={`ml-4 p-2 cursor-pointer bg-light rounded-full ${!message && 'pointer-events-none'}`} onClick={() => sendMessage()}>
+							<svg xmlns="http://www.w3.org/2000/svg" className="icon icon-tabler icon-tabler-send" width="30" height="30" viewBox="0 0 24 24"  fill="none">
+								<path d="M0 0h24v24H0z" fill="none" />
+								<line x1="10" y1="14" x2="21" y2="3" />
+								<path d="M21 3l-6.5 18a0.55 .55 0 0 1 -1 0l-3.5 -7l-7 -3.5a0.55 .55 0 0 1 0 -1l18 -6.5" />
+							</svg>
+						</div>
+						<div className={`ml-4 p-2 cursor-pointer bg-light rounded-full ${!message && 'pointer-events-none'}`}>
+							<svg xmlns="http://www.w3.org/2000/svg" className="icon icon-tabler icon-tabler-circle-plus" width="30" height="30" viewBox="0 0 24 24" fill="none">
+								<path d="M0 0h24v24H0z" fill="none" />
+								<circle cx="12" cy="12" r="9" />
+								<line x1="9" y1="12" x2="15" y2="12" />
+								<line x1="12" y1="9" x2="12" y2="15" />
+							</svg>
+						</div>
+					</div>
+				}
       </div>
-      <div className="w-[25%] h-screen border"></div>
+      <div className='w-[25%] h-screen bg-light px-8 py-16 overflow-scroll'>
+				<div className='text-lg text-primary'>People</div>
+				<div>
+					{
+						users.length > 0 ?
+							users.map(({  userId, user }) => {
+								return (
+									<div className='flex items-center py-8 border-b border-b-gray-300'>
+										<div className='flex items-center cursor-pointer' onClick={() => fetchMessages('new', user)}>
+											<div><img src={Avatar} className="w-[60px] h-[60px] rounded-full p-[2px] border border-primary" alt="person"/></div>
+											<div className='ml-6'>
+												<h3 className='text-lg font-semibold'>{user?.name}</h3>
+												<p className='text-sm font-light text-gray-600'>{user?.email}</p>
+											</div>
+										</div>
+									</div>
+								)
+							}) : <div className='mt-24 text-lg font-semibold text-center'>No Conversations</div>
+					}
+				</div>
+			</div>
     </div>
   );
 };
