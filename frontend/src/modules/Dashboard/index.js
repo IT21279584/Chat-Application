@@ -1,6 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import Avatar from "../../assets/OIP.jpeg";
 import Input from "../../components/index";
+import { io } from 'socket.io-client'
 
 const Dashboard = () => {
 
@@ -9,6 +10,29 @@ const Dashboard = () => {
   const [messages, setMessages] = useState([])
   const [message, setMessage] = useState([])
   const [users, setUsers] = useState([])
+  const [socket, setSocket] = useState(null)
+	const messageRef = useRef(null)
+
+	useEffect(() => {
+		setSocket(io('http://localhost:8090'))
+	}, [])
+
+	useEffect(() => {
+		socket?.emit('addUser', user?.id);
+		socket?.on('getUsers', users => {
+			console.log('activeUsers :>> ', users);
+		})
+		socket?.on('getMessage', data => {
+			setMessages(prev => ({
+				...prev,
+				messages: [...prev.messages, { user: data.user, message: data.message }]
+			}))
+		})
+	}, [socket])
+
+	useEffect(() => {
+		messageRef?.current?.scrollIntoView({ behavior: 'smooth' })
+	}, [messages?.messages])
   
 
 
@@ -54,16 +78,24 @@ const Dashboard = () => {
 
   const sendMessage = async(e)=>{
   
+    setMessage('')
+		socket?.emit('sendMessage', {
+			senderId: user?.id,
+			receiverId: messages?.receiver?.receiverId,
+			message,
+			conversationId: messages?.conversationId
+		});
+    
     const res = await fetch('http://localhost:8050/messages/api/message', {
       method:'POST',
       headers:{
-        'Content_Type': 'application/json'
+        'Content-Type': 'application/json', 
       },
       body: JSON.stringify({
         conversationId: messages?.conversationId,
         senderId: user?.id,
         message,
-        receiverId: messages?.receiver?.id
+        receiverId: messages?.receiver?.receiverId
       })
     })
     const resData = await res.json()
@@ -157,21 +189,16 @@ const Dashboard = () => {
             
             {messages?.messages?.length > 0 ?
             
-            messages.messages.map(({messages, user :{id} = {}})=>{
+            messages.messages.map(({message, user :{id} = {}})=>{
              
-              if(id === user?.id){
+             
                 return (
-                  <div className="max-w-[40%] bg-secondary rounded-b-xl rounded-tr-xl clear-right p-4 mb-6">
-              {messages}
-            </div>
+                  <>
+                  <div className={`max-w-[40%] rounded-b-xl p-4 mb-6 ${id === user?.id ? 'bg-primary text-white rounded-tl-xl ml-auto' : 'bg-secondary rounded-tr-xl'} `}>{message}</div>
+                  <div ref={messageRef}></div>
+                  </>
                 )
-              }else{
-                return(
-                  <div className="max-w-[40%] bg-primary rounded-b-xl rounded-tl-xl p-4 float-right clear-left mb-6 text-white">
-                 {messages}
-                </div>
-                )
-              }
+              
               
             }) : <div className='mt-24 text-lg font-semibold text-center'>No Messages or No Conversation Selected</div>       
             }
@@ -183,16 +210,16 @@ const Dashboard = () => {
 					messages?.receiver?.name &&
 					<div className='flex items-center w-full p-14'>
 						<Input placeholder='Type a message...' value={message} onChange={(e) => setMessage(e.target.value)} className='w-[75%]' inputClassName='p-4 border-0 shadow-md rounded-full bg-light focus:ring-0 focus:border-0 outline-none' />
-						<div className={`ml-4 p-2 cursor-pointer bg-light rounded-full ${!message && 'pointer-events-none'}`} onClick={() => sendMessage()}>
-							<svg xmlns="http://www.w3.org/2000/svg" className="icon icon-tabler icon-tabler-send" width="30" height="30" viewBox="0 0 24 24"  fill="none">
-								<path d="M0 0h24v24H0z" fill="none" />
+						<div className={`ml-4 p-2 cursor-pointer rounded-full  ${!message && 'pointer-events-none'}`} onClick={() => sendMessage()}>
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-send" width="30" height="30" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2c3e50" fill="none" stroke-linecap="round" stroke-linejoin="round">
+								<path stroke="none" d="M0 0h24v24H0z" fill="none" />
 								<line x1="10" y1="14" x2="21" y2="3" />
 								<path d="M21 3l-6.5 18a0.55 .55 0 0 1 -1 0l-3.5 -7l-7 -3.5a0.55 .55 0 0 1 0 -1l18 -6.5" />
 							</svg>
 						</div>
 						<div className={`ml-4 p-2 cursor-pointer bg-light rounded-full ${!message && 'pointer-events-none'}`}>
-							<svg xmlns="http://www.w3.org/2000/svg" className="icon icon-tabler icon-tabler-circle-plus" width="30" height="30" viewBox="0 0 24 24" fill="none">
-								<path d="M0 0h24v24H0z" fill="none" />
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-circle-plus" width="30" height="30" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2c3e50" fill="none" stroke-linecap="round" stroke-linejoin="round">
+								<path stroke="none" d="M0 0h24v24H0z" fill="none" />
 								<circle cx="12" cy="12" r="9" />
 								<line x1="9" y1="12" x2="15" y2="12" />
 								<line x1="12" y1="9" x2="12" y2="15" />

@@ -10,7 +10,7 @@ router.post('/api/conversation', async (req, res) => {
         await newCoversation.save();
         res.status(200).send('Conversation created successfully');
     } catch (error) {
-        console.log(error, 'Error')
+        console.log(error, 'Error') 
     }
 })
  

@@ -7,7 +7,7 @@ const router = express.Router()
 
 router.post('/api/message', async (req, res) => {
     try {
-        const { conversationId, senderId, message, receiverId = '' } = req.body;
+        const { conversationId, senderId, message, receiverId  = ''} = req.body;
         if (!senderId || !message) return res.status(400).send('Please fill all required fields')
         if (conversationId === 'new' && receiverId) {
             const newCoversation = new Conversations({ members: [senderId, receiverId] });
