@@ -153,36 +153,27 @@ const Dashboard = () => {
         </div>
       </div>
       <div className="w-[50%] h-screen bg-white flex flex-col items-center">
-        {
-          messages?.receiver?.name &&
-        <div className="w-[75%] bg-secondary h-[80px] mt-14 rounded-full flex items-center px-14 mb-6">
-          <div className="cursor-pointer">
-            <img src={Avatar} alt="mainIcon" height={60} width={60} />
-          </div>
-          <div className="ml-6 mr-auto">
-            <h3 className="text-lg">{messages?.receiver?.name}</h3>
-            <p className="text-sm font-light text-gray-600">{messages?.receiver?.email}</p>
-          </div>
-          <div className="cursor-pointer">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="icon icon-tabler icon-tabler-phone-call"
-              width="30"
-              height="30"
-              viewBox="0 0 24 24"
+      {
+					messages?.receiver?.name &&
+         
+        
+					<div className='w-[75%] bg-secondary h-[80px] my-14 rounded-full flex items-center px-14 py-2'>
+						<div className='cursor-pointer'><img src={Avatar} width={60} height={60} className="rounded-full" alt="receiver"/></div>
+						<div className='ml-6 mr-auto'>
+							<h3 className='text-lg'>{messages?.receiver?.name}</h3>
               
-              
-              fill="none"
-              
-            >
-              <path d="M0 0h24v24H0z" fill="none" />
-              <path d="M5 4h4l2 5l-2.5 1.5a11 11 0 0 0 5 5l1.5 -2.5l5 2v4a2 2 0 0 1 -2 2a16 16 0 0 1 -15 -15a2 2 0 0 1 2 -2" />
-              <path d="M15 7a2 2 0 0 1 2 2" />
-              <path d="M15 3a6 6 0 0 1 6 6" />
-            </svg>   
-          </div> 
-        </div>    
-        }
+							<p className='text-sm font-light text-gray-600'>{messages?.receiver?.email}</p>
+						</div>
+						<div className='cursor-pointer'>
+							<svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-phone-outgoing" width="24" height="24" viewBox="0 0 24 24" stroke-width="1.5" stroke="black" fill="none" stroke-linecap="round" stroke-linejoin="round">
+								<path stroke="none" d="M0 0h24v24H0z" fill="none" />
+								<path d="M5 4h4l2 5l-2.5 1.5a11 11 0 0 0 5 5l1.5 -2.5l5 2v4a2 2 0 0 1 -2 2a16 16 0 0 1 -15 -15a2 2 0 0 1 2 -2" />
+								<line x1="15" y1="9" x2="20" y2="4" />
+								<polyline points="16 4 20 4 20 8" />
+							</svg>
+						</div>
+					</div>
+				}
         
         <div className="h-[75%]  w-full overflow-y-scroll">
           <div className="p-14">

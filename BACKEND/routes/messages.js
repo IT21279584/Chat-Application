@@ -33,7 +33,7 @@ router.get('/api/message/:conversationId', async (req, res) => {
             const messages = await Messages.find({ conversationId });
             const messageUserData = Promise.all(messages.map(async (message) => {
                 const user = await Users.findById(message.senderId);
-                return { user: { id: user._id, email: user.email, fullName: user.fullName }, message: message.message }
+                return { user: { id: user._id, email: user.email, name: user.name }, message: message.message }
             }));
             res.status(200).json(await messageUserData);
         }
@@ -41,7 +41,7 @@ router.get('/api/message/:conversationId', async (req, res) => {
         if (conversationId === 'new') {
             const checkConversation = await Conversations.find({ members: { $all: [req.query.senderId, req.query.receiverId] } });
             if (checkConversation.length > 0) {
-                checkMessages(checkConversation[0]._id);
+                checkMessages(checkConversation[0]._id); 
             } else {
                 return res.status(200).json([])
             }
